@@ -51,8 +51,7 @@ functions: the following is for dev environment, its similar in production envir
 
 Note:
 right now the retention policy for the default log group is 30.however there is a log group named  API-Gateway-Execution-Logs(ex. API-Gateway-Execution-Logs_4d0zprlx54/dev)
-for dev and prod stage which stores all the result for the execution log, currently due toI am unable to figure out the retention policy for API-Gatway log file group.
-
+for dev and prod stage which stores all the result for the execution log。
 
 
 
