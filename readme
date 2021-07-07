@@ -1,0 +1,63 @@
+Hello This Test was created based on the test that was sended out from Rackspace
+
+
+The account password was changed to
+OnicaTest1234910
+
+did configure the access key and Secret Access key for this account
+
+The access key: is AKIAWIIJP2SVSYDSLWHK
+The Secret Access key is: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
+
+used the serverless framework for this test
+and the programming framework is the NODE.JS(for Javascript)
+
+
+if the serverless framework was not configured then use
+
+serverless config credentials --provider aws --key AKIAWIIJP2SVSYDSLWHK --secret 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
+
+navigate to the directory with serverless.yml used the following command to  deploy this api
+then use:
+sls deploy --stage dev
+sls deploy --stage prod
+
+functions: the following is for dev environment, its similar in production environment except that "dev" woud be become "prod" if changed to production
+  createEmployee: my-employee-application-dev-createEmployee
+
+  this function is used to create employee accept parameter such as
+  {"id": "1", "firstname":"John","lastname":"Mac"}
+
+
+  getEmployee: my-employee-application-dev-getEmployee
+  getting single employee and all its information
+
+  the return result should be
+   {"id": "1", name:{"firstname":"John","lastname":"mac"}}
+
+  getEmployees: my-employee-application-dev-getEmployees
+  getting all employee's Id(data need to exist in dyanmodb)
+
+  return result is similar to " 1 2 3 4 5 6 "
+
+  there is also the proxy gateway for routing other than above
+  app: my-employee-application-dev-app
+
+  the command used for testing would be similar to
+
+  curl -H "Content-Type: application/json" -X POST ${BASE_DOMAIN}/employees -d '{"id": "1", "firstname":"John","lastname":"Mac"}'
+  curl -H "Content-Type: application/json" -X GET ${BASE_DOMAIN}/employee/2
+
+  the base domain is the deployed api address similar as:
+  where the BASE_DOMAIN=https://4d0zprlx54.execute-api.us-east-1.amazonaws.com/dev/employees
+
+
+Note:
+right now the retention policy for the default log group is 30.however there is a log group named  API-Gateway-Execution-Logs(ex. API-Gateway-Execution-Logs_4d0zprlx54/dev)
+for dev and prod stage which stores all the result for the execution log, currently due toI am unable to figure out the retention policy for API-Gatway log file group.
+
+
+
+
+
+

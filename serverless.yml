@@ -1,0 +1,68 @@
+service: my-employee-application
+
+plugins:
+  - serverless-plugin-log-retention
+  - serverless-plugin-stage-variables
+custom:
+  tableName: 'employee-table-${self:provider.stage}'
+  logRetentionInDays: 30
+provider:
+  enableAPIGLogs: true
+  name: aws
+  logs:
+    restApi: true
+  runtime: nodejs12.x
+  stage: ${opt:stage,'dev'}
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - { "Fn::GetAtt": ["EmployeeTable", "Arn" ] }
+  environment:
+    EMPLOYEE_TABLE: ${self:custom.tableName}
+
+functions:
+  getEmployee:
+    handler: index.handler
+    events:
+      - http: 'GET /employees/:id'
+  createEmployee:
+    handler: index.handler
+    events:
+      - http: 'POST /employees'
+  getEmployees:
+    handler: index.handler
+    events:
+      - http: 'GET /employees'
+  app:
+    handler: index.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+resources:
+  Resources:
+    EmployeeTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
